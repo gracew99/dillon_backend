@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const classCategoriesSchema = mongoose.Schema({
-    classes: [Date], 
+    classes: [String], 
     date: Date
 });
 

@@ -29,35 +29,22 @@ mongoose.connect(connection_url, {
 
 
 
-  // return upcoming classes userId is registered for
+  // return upcoming classIds for classes userId is registered for
   app.get('/users/:userId', (req, res) => {
     const userId = req.params.userId;
     
-    var getClasses = function(id, callback) {
-        UserClasses.find({_id: id, date : {$gte: new Date().setHours(0,0,0,0)}}, (err, data) => {
+        UserClasses.find({_id: userId, date : {$gte: new Date().setHours(0,0,0,0)}}, (err, data) => {
             if (err) {
-                callback(err, 0)
+                res.status(500).send(err);
             } else {
-                callback(null, data)
+                res.status(200).send(data[0].classes)
             }
         })
             // .sort("date")
             // .exec((err, data) => {
             //     callback(err, data);
             // });
-    };
-  
-    getClasses(userId, function(err, data) {
-        if (err) { 
-            console.log("ERR")
-            console.log(err)
-            res.status(500).send(err);
-        } else {
-            console.log("yay")
-            console.log(data)
-            res.status(200).send(data)
-        }
-    });
+
   })
 
 // return list of classes happening today
@@ -124,7 +111,7 @@ app.get('/classes/categories', (req, res) => {
         const categoryId = req.params.categoryId;
         
         
-        GymClasses.find({categoryIds: categoryId}, (err, data) => {
+        GymClasses.find({categoryIds: parseInt(categoryId, 10)}, (err, data) => {
             if (err) {
                 console.log("ERR")
                 console.log(err)
