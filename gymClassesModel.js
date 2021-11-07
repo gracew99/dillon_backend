@@ -9,7 +9,8 @@ const gymClassesSchema = mongoose.Schema({
     description: String,  
     nextSessions: [Date],
     numEnrolled: Number,
-    categoryIds: [Number]
+    categoryIds: [Number],
+    image: String
     // password: String
 });
 

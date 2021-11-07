@@ -7,6 +7,8 @@ const GymClasses = require('./gymClassesModel.js')
 const ClassCategories = require('./classCategoriesModel.js')
 const UserClasses = require('./userClassesModel.js')
 const dotenv = require('dotenv').config();
+const { videoToken } = require('./tokens');
+const config = require('./config');
 
 
 const app = express();
@@ -27,7 +29,23 @@ mongoose.connect(connection_url, {
     useUnifiedTopology: true
 })
 
+const sendTokenResponse = (token, res) => {
+    res.set('Content-Type', 'application/json');
+    res.send(
+      JSON.stringify({
+        token: token.toJwt()
+      })
+    );
+  };
 
+  
+app.post('/video/token', (req, res) => {
+    const identity = req.body.identity;
+    const room = req.body.room;
+    console.log(identity + " " + room + " " + config);
+    const token = videoToken(identity, room, config);
+    sendTokenResponse(token, res);
+  });
 
   // return upcoming classIds for classes userId is registered for
   app.get('/users/:userId', (req, res) => {
